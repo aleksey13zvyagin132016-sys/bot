@@ -21,7 +21,10 @@ async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
     try:
         # Скачиваем видео
         filename = "video.mp4"
-        subprocess.run([
+        result = subprocess.run(cmd, capture_output=True, text=True)
+if result.returncode != 0:
+    await msg.edit_text(f"Ошибка yt-dlp:\n{result.stderr[:500]}")
+    return([
             "yt-dlp",
             "-f", "best[ext=mp4]",
             "-o", filename,
